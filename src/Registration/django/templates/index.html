@@ -4,44 +4,107 @@
 	<meta charset="UTF-8">
 	<title>Shine cluster registration</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+{#	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>#}
 </head>
 <body class="container">
 <h1>Shine cluster registration</h1>
-<form method="post" action="index.html">
 
-	<label class="row">Your MPI Email Address: <input type="email" required pattern=".+@ipm\.edu\.mo$" size="20"/></label>
-	<fieldset class="row">
-		<legend>Your major:</legend>
+{% verbatim %}
+<div id="vueApp">
+	<form method="post" action="/">
 
-		<label><input type="radio" value="cs" name="major"> Computer Science</label>
-		<label><input type="radio" value="other" name="major"> Other</label>
-	</fieldset>
+		<label class="row">Your IPM Email Address: <input name="email" v-model="email" type="email" required  pattern=".+@ipm\.edu\.mo$" size="30"/></label>
+		<fieldset class="row">
+			<legend>Your major:</legend>
 
-	<fieldset id="usePublicKeyQuestion" class="row">
-		<legend>Do you want to use public key authentication for SSH login?</legend>
+			<label><input type="radio" value="cs" name="major" required checked> Computer Science</label>
+			<label><input type="radio" value="other" name="major"> Other</label>
+		</fieldset>
 
-		<label><input type="radio" checked name="key"> Yes</label>
-		<label><input type="radio" name="key" id="keyNoInput"> No, I want to use password.</label>
-	</fieldset>
+		<fieldset id="usePublicKeyQuestion" class="row">
+			<legend>Do you want to use public key authentication for SSH login?</legend>
 
-	<label id="publicKeyQuestion" class="row">Your public key: <textarea rows="3" cols="30"></textarea> </label>
+			<label><input v-model="usePublicKey" type="radio" checked name="key" v-bind:value="true"> Yes</label>
+			<label><input v-model="usePublicKey" type="radio" name="key" v-bind:value="false"> No, I want to use password.</label>
+		</fieldset>
 
-	<label class="row">Your user name: <input type="text" minlength="5" maxlength="15" required/></label>
+		<label v-if="usePublicKey" id="publicKeyQuestion" class="row">Your public key: <textarea name="publicKey" v-model="publicKey" rows="3" cols="30" style="word-break: break-all"></textarea> </label>
 
-	<button type="submit" class="row">Submit</button>
-</form>
+		<label class="row">Your user name: <input name="username" v-model="username" type="text" minlength="5" v-bind:maxlength="usernameMaxLength" required/></label>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<div v-if="errors.length>0" class="row">
+			<ul class="alert alert-warning" role="alert">
+				<li v-for="error in errors">{{ error }}</li>
+			</ul>
+		</div>
+		<button type="submit" class="row" :disabled="errors.length>0">Submit</button>
+	</form>
+</div>
+{% endverbatim %}
+
+<script src="https://cdn.jsdelivr.net/npm/vue@3.0.11/dist/vue.global.prod.js"></script>
 <script>
-	$(() => {
-		$('#usePublicKeyQuestion').on('change', function () {
-			if ($('#keyNoInput').is(':checked'))
-				$('#publicKeyQuestion').hide();
-			else
-				$('#publicKeyQuestion').show();
-		});
-	});
+	function getKeyLength(publicKey) {
+		let parts = publicKey.split(' ');
+		if (parts.length === 3 || parts.length === 2)
+			return parts[1].length;
+		else
+			throw 'Public key format is incorrect.';
+	}
+
+	function validatePublicKey() {
+		this.errorDict['publicKey'] = [];
+		let errors = this.errorDict['publicKey'];
+		if (!this.usePublicKey)
+			return;
+
+		if (!this.publicKey.startsWith('ssh-rsa '))
+			errors.push('Public key format is incorrect. It must start with "ssh-rsa ".');
+		else {
+			try {
+				if (getKeyLength(this.publicKey) <= 250)
+					errors.push('Public key is not long enough. It must at least have 2048 bits.');
+			} catch (e) {
+				errors.push(e);
+			}
+		}
+
+		let parts = this.publicKey.split(' ');
+		if (parts.length === 3)
+			this.username = parts[2];
+	}
+
+
+	const vueApp = {
+		data() {
+			return {
+				errorDict: {},
+				email: "gqqnbig@gmail.com",
+				usePublicKey: true,
+				publicKey: '',
+				username: '',
+				usernameMaxLength: {{ usernameMaxLength }},
+			}
+		},
+		computed: {
+			errors() {
+				return Object.values(this.errorDict).flat();
+			},
+		},
+		watch: {
+			publicKey: validatePublicKey,
+			usePublicKey: validatePublicKey,
+			username: function (newV) {
+				this.errorDict['username'] = [];
+				let errors = this.errorDict['username'];
+				if (newV.length > this.usernameMaxLength)
+					errors.push(`Maximum length of username is ${this.usernameMaxLength}.`);
+
+			}
+		},
+	};
+
+	Vue.createApp(vueApp).mount('#vueApp');
 </script>
 
 </body>
