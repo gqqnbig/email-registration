@@ -70,7 +70,7 @@
 		}
 
 		let parts = this.publicKey.split(' ');
-		if (parts.length === 3)
+		if (parts.length === 3 && this.username === '')
 			this.username = parts[2];
 	}
 
@@ -79,12 +79,12 @@
 		data() {
 			return {
 				errorDict: {},
-				email: "gqqnbig@gmail.com",
+				email: '',
 				usePublicKey: true,
 				publicKey: '',
 				username: '',
 				usernameMaxLength: {{ usernameMaxLength }},
-			}
+			};
 		},
 		computed: {
 			errors() {
@@ -100,7 +100,7 @@
 				if (newV.length > this.usernameMaxLength)
 					errors.push(`Maximum length of username is ${this.usernameMaxLength}.`);
 
-			}
+			},
 		},
 	};
 

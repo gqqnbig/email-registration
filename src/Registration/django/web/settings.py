@@ -33,8 +33,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.staticfiles',
-    'web',
+	'django.contrib.staticfiles',
+	'web',
 ]
 
 # MIDDLEWARE = [
@@ -58,24 +58,30 @@ TEMPLATES = [
 			'context_processors': [
 				'django.template.context_processors.debug',
 				'django.template.context_processors.request',
-				#'django.contrib.auth.context_processors.auth',
+				# 'django.contrib.auth.context_processors.auth',
 				'django.contrib.messages.context_processors.messages',
 			],
 		},
 	},
 ]
 
+CACHES = {
+	'default': {
+		'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+	}
+}
+
 WSGI_APPLICATION = 'web.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.sqlite3',
-		'NAME': BASE_DIR / 'db.sqlite3',
-	}
-}
+# DATABASES = {
+# 	'default': {
+# 		'ENGINE': 'django.db.backends.sqlite3',
+# 		'NAME': BASE_DIR / 'db.sqlite3',
+# 	}
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -117,3 +123,14 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CREATE_ACCOUNT = ''
+
+try:
+	# django will import settings twice on development environment
+	# probably because of auto reload.
+	from web.ProductionSettings import *
+	# print(f'PID {os.getpid()}: Production settings loaded.')
+except ModuleNotFoundError:
+	pass
+
