@@ -60,8 +60,8 @@ def index(request: django.http.HttpRequest):
 			}
 			cache.set('verify-' + guid, accountInfo, 30 * 60)
 
-			message = f'Click <a href="http://aha.ipm.edu.mo/verify?id={guid}">this link</a> to activate your account. The link is valid for 30 minutes.'
-			# send_mail('Shine account verification', message, 'aha@ipm.edu.mo', [email], html_message=message)
+			message = f'Click <a href="{request.scheme}://{request.META["HTTP_HOST"]}/verify?id={guid}">this link</a> to activate your account. The link is valid for 30 minutes.'
+			send_mail('Shine account verification', message, 'aha@ipm.edu.mo', [email], html_message=message)
 			print(f'{guid} -> {accountInfo}')
 			return django.http.HttpResponse(f'A verification email has been sent to {email}. Click the link in the email to activate your account.')
 
@@ -77,5 +77,5 @@ def verify(request: django.http.HttpRequest):
 		cache.delete('verify-' + guid)
 
 		subprocess.check_output([settings.CREATE_ACCOUNT, accountInfo['username'], accountInfo['email'], accountInfo['publicKey']])
-		return django.http.HttpResponse(f'Account {accountInfo["username"]} is created on aha.ipm.edu.mo.')
-
+		send_mail('Shine account created', f'Account {accountInfo["username"]} is created.', 'aha.ipm.edu.mo', [accountInfo['email']])
+		return django.http.HttpResponse(f'Account {accountInfo["username"]} is created.')
