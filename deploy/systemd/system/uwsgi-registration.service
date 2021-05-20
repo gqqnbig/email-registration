@@ -1,0 +1,15 @@
+[Unit]
+Description=run uwsgi service for account registration
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+WorkingDirectory=/var/www/shine-registration/
+Type=simple
+Restart=always
+RestartSec=0
+User=www-data
+# Compile translation files
+ExecStart=uwsgi --socket /var/www/shine-registration/mysite.sock --chmod-socket=666 --chdir src/shine-registration/django --module web.wsgi --enable-threads
+
+[Install]
+WantedBy=multi-user.target
