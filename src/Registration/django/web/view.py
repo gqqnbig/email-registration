@@ -73,6 +73,10 @@ def verify(request: django.http.HttpRequest):
 		response = django.http.HttpResponse('Incorrect parameters')
 		response.status_code = 404
 		return response
+	elif not settings.CREATE_ACCOUNT:
+		response = django.http.HttpResponse('Create account program is not set up.')
+		response.status_code = 500
+		return response
 	else:
 		cache.delete('verify-' + guid)
 
