@@ -1,6 +1,7 @@
 import django.http
 import uuid
 import subprocess
+import json
 
 from django.shortcuts import render
 from django.core.mail import send_mail
@@ -36,6 +37,8 @@ def index(request: django.http.HttpRequest):
 			errors.append(f'The length of user name must be from 5 to 15, but you have {username}.')
 
 		usePublicKey = request.POST['key'] == 'true'
+
+		publicKey = None
 		if usePublicKey:
 			publicKey = request.POST['publicKey']
 
@@ -51,19 +54,22 @@ def index(request: django.http.HttpRequest):
 		if len(errors) > 0:
 			return django.http.HttpResponse('<p>'.join(errors))
 
-		if request.POST['major'] == 'cs' and usePublicKey:
-			guid = uuid.uuid4().hex
-			accountInfo = {
-				'email': email,
-				'username': username,
-				'publicKey': publicKey,
-			}
-			cache.set('verify-' + guid, accountInfo, 30 * 60)
+		# if request.POST['major'] == 'cs' and usePublicKey:
+		guid = uuid.uuid4().hex
+		accountInfo = {
+			'email': email,
+			'username': username,
+			'major': request.POST['major']
+		}
+		if publicKey:
+			accountInfo['publicKey'] = publicKey
 
-			message = f'Click <a href="{request.scheme}://{request.META["HTTP_HOST"]}/verify?id={guid}">this link</a> to activate your account. The link is valid for 30 minutes.'
-			send_mail('Shine account verification', message, 'aha@ipm.edu.mo', [email], html_message=message)
-			print(f'{guid} -> {accountInfo}')
-			return django.http.HttpResponse(f'A verification email has been sent to {email}. Click the link in the email to activate your account.')
+		cache.set('verify-' + guid, accountInfo, 30 * 60)
+
+		message = f'Click <a href="{request.scheme}://{request.META["HTTP_HOST"]}/verify?id={guid}">this link</a> to activate your account. The link is valid for 30 minutes.'
+		send_mail('Shine Cluster Account Verification', message, 'aha@ipm.edu.mo', [email], html_message=message)
+		print(f'{guid} -> {accountInfo}')
+		return django.http.HttpResponse(f'A verification email has been sent to {email}. Click the link in the email to activate your account. ')
 
 
 def verify(request: django.http.HttpRequest):
@@ -73,13 +79,18 @@ def verify(request: django.http.HttpRequest):
 		response = django.http.HttpResponse('Incorrect parameters')
 		response.status_code = 404
 		return response
-	elif not settings.CREATE_ACCOUNT:
-		response = django.http.HttpResponse('Create account program is not set up.')
-		response.status_code = 500
-		return response
-	else:
-		cache.delete('verify-' + guid)
 
-		subprocess.check_output([settings.CREATE_ACCOUNT, accountInfo['username'], accountInfo['email'], accountInfo['publicKey']])
-		send_mail('Shine account created', f'Account {accountInfo["username"]} is created.', 'aha.ipm.edu.mo', [accountInfo['email']])
-		return django.http.HttpResponse(f'Account {accountInfo["username"]} is created.')
+	if 'publicKey' not in accountInfo or accountInfo['major'] != 'cs':
+		if not settings.ADMIN_EMAILS:
+			return django.http.HttpResponse('Cluster administrator emails are not set.', status=500)
+
+		message = json.dumps(accountInfo)
+		send_mail('Shine account manual creation required', message, 'aha@ipm.edu.mo', settings.ADMIN_EMAILS)
+		return django.http.HttpResponse('Cluster administrators will get back to you as soon as possible.')
+
+	if not settings.CREATE_ACCOUNT:
+		return django.http.HttpResponse('Create account program is not set up.', status=500)
+
+	cache.delete('verify-' + guid)
+	subprocess.check_output([settings.CREATE_ACCOUNT, '--email', accountInfo['email'], '--publick-key', accountInfo['publicKey']], accountInfo['username'])
+	return django.http.HttpResponse(f'Account {accountInfo["username"]} is created.')
