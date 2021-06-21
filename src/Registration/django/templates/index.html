@@ -32,6 +32,14 @@
 
 		<label class="row">Your user name: <input name="username" v-model="username" type="text" minlength="5" v-bind:maxlength="usernameMaxLength" required/></label>
 
+
+		<fieldset class="row">
+			<legend>You understand:</legend>
+			<label><input type="checkbox" required> The documentations of the cluster are on <a href="https://github.com/gqqnbig/mpi-servers/wiki" target="_blank">https://github.com/gqqnbig/mpi-servers/wiki</a>.</label>
+			<label><input type="checkbox" required> The documentations of SLURM are on <a href="https://slurm.schedmd.com" target="_blank">https://slurm.schedmd.com</a>.</label>
+			<label><input type="checkbox" required> The documentations of Ubuntu 20.04 commands are on <a href="http://manpages.ubuntu.com" target="_blank">http://manpages.ubuntu.com</a>.</label>
+		</fieldset>
+
 		<div v-if="errors.length>0" class="row">
 			<ul class="alert alert-warning" role="alert">
 				<li v-for="error in errors">{{ error }}</li>
