@@ -25,7 +25,7 @@
 			<legend>Do you want to use public key authentication for SSH login?</legend>
 
 			<label><input v-model="usePublicKey" type="radio" checked name="key" v-bind:value="true"> Yes</label>
-			<label><input v-model="usePublicKey" type="radio" name="key" v-bind:value="false"> No, I want to use password.</label>
+			<label><input v-model="usePublicKey" type="radio" name="key" v-bind:value="false" disabled> No, I want to use password.</label>
 		</fieldset>
 
 		<label v-if="usePublicKey" id="publicKeyQuestion" class="row">Your public key: <textarea name="publicKey" v-model="publicKey" rows="3" cols="30" style="word-break: break-all"></textarea> </label>
