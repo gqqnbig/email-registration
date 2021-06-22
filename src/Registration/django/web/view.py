@@ -59,7 +59,8 @@ def index(request: django.http.HttpRequest):
 		accountInfo = {
 			'email': email,
 			'username': username,
-			'major': request.POST['major']
+			'major': request.POST['major'],
+			'useZShell': request.POST['useZShell'] == 'true',
 		}
 		if publicKey:
 			accountInfo['publicKey'] = publicKey
@@ -92,5 +93,9 @@ def verify(request: django.http.HttpRequest):
 		return django.http.HttpResponse('Create account program is not set up.', status=500)
 
 	cache.delete('verify-' + guid)
-	subprocess.check_output([settings.CREATE_ACCOUNT, '--email', accountInfo['email'], '--publick-key', accountInfo['publicKey']], accountInfo['username'])
+	commands = [settings.CREATE_ACCOUNT, '--email', accountInfo['email'], '--public-key', accountInfo['publicKey'], accountInfo['username']]
+	if accountInfo['useZShell']:
+		commands.insert(-1, '--zsh')
+
+	subprocess.check_output(commands)
 	return django.http.HttpResponse(f'Account {accountInfo["username"]} is created.')

@@ -32,6 +32,12 @@
 
 		<label class="row">Your user name: <input name="username" v-model="username" type="text" minlength="5" v-bind:maxlength="usernameMaxLength" required/></label>
 
+		<fieldset class="row">
+			<legend>Which shell do you like to use?</legend>
+			<label><input type="radio" v-model="useZShell" checked name="useZShell" v-bind:value="true"> The beautiful Z Shell (ZSH)</label>
+			<label><input type="radio" name="useZShell" v-bind:value="false"> The classic Bourne Again Shell (BASH)</label>
+		</fieldset>
+
 
 		<fieldset class="row">
 			<legend>You understand:</legend>
@@ -89,6 +95,7 @@
 				errorDict: {},
 				email: '',
 				usePublicKey: true,
+				useZShell: true,
 				publicKey: '',
 				username: '',
 				usernameMaxLength: {{ usernameMaxLength }},
