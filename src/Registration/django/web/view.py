@@ -98,10 +98,10 @@ def verify(request: django.http.HttpRequest):
 	if not settings.CREATE_ACCOUNT:
 		return django.http.HttpResponse('Create account program is not set up.', status=500)
 
-	cache.delete('verify-' + guid)
 	commands = [settings.CREATE_ACCOUNT, '--email', accountInfo['email'], '--public-key', accountInfo['publicKey'], accountInfo['username']]
 	if accountInfo['useZShell']:
 		commands.insert(-1, '--zsh')
 
 	subprocess.check_output(commands)
+	cache.delete('verify-' + guid)
 	return django.http.HttpResponse(f'Account {accountInfo["username"]} is created.')
