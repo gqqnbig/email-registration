@@ -83,7 +83,7 @@ def verify(request: django.http.HttpRequest):
 	guid = request.GET.get('id', '')
 	accountInfo = cache.get('verify-' + guid)
 	if accountInfo is None:
-		response = django.http.HttpResponse('Incorrect parameters')
+		response = django.http.HttpResponse('Link is expired.')
 		response.status_code = 404
 		return response
 
