@@ -36,6 +36,12 @@ def index(request: django.http.HttpRequest):
 		if not 5 <= len(username) <= usernameMaxLength:
 			errors.append(f'The length of user name must be from 5 to 15, but you have {username}.')
 
+		try:
+			subprocess.check_output(['id', '-u', username])
+			errors.append(f'{username} already exists.')
+		except subprocess.CalledProcessError:
+			pass
+
 		usePublicKey = request.POST['key'] == 'true'
 
 		publicKey = None
