@@ -34,8 +34,8 @@
 
 		<fieldset class="row">
 			<legend>Which shell do you like to use?</legend>
-			<label><input type="radio" v-model="useZShell" checked name="useZShell" v-bind:value="true"> The beautiful Z Shell (ZSH)</label>
-			<label><input type="radio" name="useZShell" v-bind:value="false"> The classic Bourne Again Shell (BASH)</label>
+			<label><input type="radio" v-model="useZShell" name="useZShell" v-bind:value="true"> The beautiful Z Shell (ZSH)</label>
+			<label><input type="radio" v-model="useZShell" name="useZShell" v-bind:value="false"> The classic Bourne Again Shell (BASH)</label>
 		</fieldset>
 
 
@@ -44,6 +44,8 @@
 			<label><input type="checkbox" required> The documentations of the cluster are on <a href="https://github.com/gqqnbig/mpi-servers/wiki" target="_blank">https://github.com/gqqnbig/mpi-servers/wiki</a>.</label>
 			<label><input type="checkbox" required> The documentations of SLURM are on <a href="https://slurm.schedmd.com" target="_blank">https://slurm.schedmd.com</a>.</label>
 			<label><input type="checkbox" required> The documentations of Ubuntu 20.04 commands are on <a href="http://manpages.ubuntu.com" target="_blank">http://manpages.ubuntu.com</a>.</label>
+			<label v-if='useZShell'><input type="checkbox" required> The documentations of Z Shell are on <a href="https://zsh.sourceforge.io/Doc/Release/zsh_toc.html" target="_blank">https://zsh.sourceforge.io/Doc/Release/zsh_toc.html</a>.</label>
+			<label v-if='!useZShell'><input type="checkbox" required> The documentations of Bash are on <a href="https://www.gnu.org/software/bash/manual/bash.html" target="_blank">https://www.gnu.org/software/bash/manual/bash.html</a>.</label>
 		</fieldset>
 
 		<div v-if="errors.length>0">
