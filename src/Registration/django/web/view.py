@@ -102,6 +102,12 @@ def verify(request: django.http.HttpRequest):
 	if accountInfo['useZShell']:
 		commands.insert(-1, '--zsh')
 
-	subprocess.check_output(commands)
+	output = ''
+	try:
+		output = subprocess.check_output(commands, stderr=subprocess.STDOUT)
+	except subprocess.CalledProcessError as e:
+		print(f'{commands} returns error.\n{e.output}\n\n{str(e)}')
+		return django.http.HttpResponse('Server error', status=500)
+
 	cache.delete('verify-' + guid)
 	return django.http.HttpResponse(f'Account {accountInfo["username"]} is created.')
