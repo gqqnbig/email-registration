@@ -30,7 +30,11 @@
 
 		<label v-if="usePublicKey" id="publicKeyQuestion" class="row">Your public key: <textarea name="publicKey" v-model="publicKey" required rows="3" cols="30" style="word-break: break-all"></textarea> </label>
 
-		<label class="row">Your user name: <input name="username" v-model="username" type="text" minlength="5" v-bind:maxlength="usernameMaxLength" required/></label>
+		<label class='row'>
+			<span class="d-block">Your user name: (Follow regex <code>[a-z_][a-z0-9_-]*</code>)</span>
+			<span class="form-text">用户名大于等于5个字符，应具有描述性。比如joe biden，他的first name太短，用户名应为joseph、joebiden、jbiden之类的。</span>
+			<input name="username" v-model="username" type="text" minlength="5" v-bind:maxlength="usernameMaxLength" pattern='[a-z_][a-z0-9_-]*' required/>
+		</label>
 
 		<fieldset class="row">
 			<legend>Which shell do you like to use?</legend>
