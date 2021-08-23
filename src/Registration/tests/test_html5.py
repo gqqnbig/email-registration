@@ -16,7 +16,7 @@ def test_html5Conformance(websiteUrl):
 	# OK to use v-bind shorthand
 	errors = [m for m in errors if 'Attribute “:' not in m['message']]
 
-	assert len(errors) == 0
+	assert len([m['message'] for m in errors]) == 0
 
 
 if __name__ == '__main__':
