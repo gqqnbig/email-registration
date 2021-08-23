@@ -55,8 +55,8 @@
 			<label v-if='!useZShell'><input type="checkbox" required> The documentations of Bash are on <a href="https://www.gnu.org/software/bash/manual/bash.html" target="_blank">https://www.gnu.org/software/bash/manual/bash.html</a>.</label>
 		</fieldset>
 
-		<div v-if="errors.length>0">
-			<ul class="alert alert-warning" role="alert">
+		<div v-if="errors.length>0" class="row alert alert-warning" role="alert">
+			<ul>
 				<li v-for="error in errors">{{ error }}</li>
 			</ul>
 		</div>
