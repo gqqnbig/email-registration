@@ -28,7 +28,10 @@
 			<label><input v-model="usePublicKey" type="radio" name="key" v-bind:value="false" disabled> No, I want to use password.</label>
 		</fieldset>
 
-		<label v-if="usePublicKey" id="publicKeyQuestion" class="row">Your public key: <textarea name="publicKey" v-model="publicKey" required rows="3" cols="30" style="word-break: break-all"></textarea> </label>
+		<label v-if="usePublicKey" id="publicKeyQuestion" class='row'>
+			<span class="d-block">Your public key: (<a href='https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys#createsshkeys' target='_blank'>How do I create one?</a>)</span>
+			<textarea class='row' name="publicKey" v-model="publicKey" required rows="3" cols="30" style="word-break: break-all"></textarea>
+		</label>
 
 		<label class='row'>
 			<span class="d-block">Your user name: (Follow regex <code>[a-z_][a-z0-9_-]*</code>)</span>
