@@ -48,11 +48,11 @@
 
 		<fieldset class="row">
 			<legend>You understand:</legend>
-			<label><input type="checkbox" required> The documentations of the cluster are on <a href="https://github.com/gqqnbig/mpi-servers/wiki" target="_blank">https://github.com/gqqnbig/mpi-servers/wiki</a>.</label>
-			<label><input type="checkbox" required> The documentations of SLURM are on <a href="https://slurm.schedmd.com" target="_blank">https://slurm.schedmd.com</a>.</label>
-			<label><input type="checkbox" required> The documentations of Ubuntu 20.04 commands are on <a href="http://manpages.ubuntu.com" target="_blank">http://manpages.ubuntu.com</a> (the 20.04 LTS column).</label>
-			<label v-if='useZShell'><input type="checkbox" required> The documentations of Z Shell are on <a href="https://zsh.sourceforge.io/Doc/Release/zsh_toc.html" target="_blank">https://zsh.sourceforge.io/Doc/Release/zsh_toc.html</a>.</label>
-			<label v-else><input type="checkbox" required> The documentations of Bash are on <a href="https://www.gnu.org/software/bash/manual/bash.html" target="_blank">https://www.gnu.org/software/bash/manual/bash.html</a>.</label>
+			<label><input type="checkbox" required> The documentations of the cluster are on <a href="https://github.com/gqqnbig/mpi-servers/wiki" style="word-break: break-all" target="_blank">https://github.com/gqqnbig/mpi-servers/wiki</a>.</label>
+			<label><input type="checkbox" required> The documentations of SLURM are on <a href="https://slurm.schedmd.com" style="word-break: break-all" target="_blank">https://slurm.schedmd.com</a>.</label>
+			<label><input type="checkbox" required> The documentations of Ubuntu 20.04 commands are on <a href="http://manpages.ubuntu.com" style="word-break: break-all" target="_blank">http://manpages.ubuntu.com</a> (the 20.04 LTS column).</label>
+			<label v-if='useZShell'><input type="checkbox" required> The documentations of Z Shell are on <a href="https://zsh.sourceforge.io/Doc/Release/zsh_toc.html" style="word-break: break-all" target="_blank">https://zsh.sourceforge.io/Doc/Release/zsh_toc.html</a>.</label>
+			<label v-else><input type="checkbox" required> The documentations of Bash are on <a href="https://www.gnu.org/software/bash/manual/bash.html" style="word-break: break-all" target="_blank">https://www.gnu.org/software/bash/manual/bash.html</a>.</label>
 		</fieldset>
 
 		<div v-if="errors.length>0" class="row alert alert-warning" role="alert">
