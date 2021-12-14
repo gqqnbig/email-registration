@@ -11,6 +11,8 @@ from django.core.mail import send_mail
 from django.core.cache import cache
 from django.conf import settings
 from django.core import serializers
+from django.template import loader
+from django import forms
 
 usernameMaxLength = 15
 
@@ -117,28 +119,50 @@ def verify(request: django.http.HttpRequest):
 	return django.http.HttpResponse(f'Account {accountInfo["username"]} is created.')
 
 
-def take_test(request: django.http.HttpRequest):
+def createQuestionSet():
 	questions = random.sample(Questions.getQuestions(), 10)
 	questions = set(questions)
+	questionGroups = [questions]
+
 	while True:
-		q1 = questions.copy()
-		size = len(q1)
-		for q in q1:
+		newGroup = set()
+		for q in questionGroups[0]:
 			if q.prerequisites is not None:
-				questions.update(q.prerequisites)
-		if len(q1) == size:
+				newGroup.update(q.prerequisites)
+		if len(newGroup) > 0:
+			questionGroups.insert(0, newGroup)
+		else:
 			break
 
-	questions = list(questions)
-	random.shuffle(questions)
+	# remove duplicate questions
+	allQuestions = set(questionGroups[0])
+	questionGroups[0] = list(questionGroups[0])
+	for i in range(1, len(questionGroups)):
+		questionGroups[i] = list(filter(lambda q: q not in allQuestions, questionGroups[i]))
+		allQuestions.update(questionGroups[i])
 
-	output = []
-	for question in questions:
-		obj = {}
-		obj['text'] = question.text
-		choices=question.choices.copy()
-		random.shuffle(choices)
-		obj['choices'] = [choice.text for choice in choices]
-		output.append(obj)
+	# shuffle
+	for group in questionGroups:
+		random.shuffle(group)
 
-	return django.http.JsonResponse(output, safe=False)
+		for question in group:
+			random.shuffle(question.choices)
+
+	return questionGroups
+
+
+def take_test(request: django.http.HttpRequest):
+	questionGroups = request.session.get('QuestionSet', None)
+	if questionGroups is None:
+		questionGroups = createQuestionSet()
+		request.session['QuestionSet'] = questionGroups
+		request.session['Page'] = 0
+
+	currentQuestions = questionGroups[request.session['Page']]
+	form = forms.Form()
+
+	for question in currentQuestions:
+		choices = [(c.text, c.text) for c in question.choices]
+		form.fields[question.text] = forms.ChoiceField(label=question.text, choices=choices, widget=forms.RadioSelect)
+
+	return render(request, 'takeTest.html', {'form': form})
