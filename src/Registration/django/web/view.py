@@ -13,6 +13,7 @@ from django.conf import settings
 from django.core import serializers
 from django.template import loader
 from django import forms
+from django.utils.safestring import mark_safe
 
 usernameMaxLength = 15
 
@@ -162,7 +163,7 @@ def take_test(request: django.http.HttpRequest):
 	form = forms.Form()
 
 	for question in currentQuestions:
-		choices = [(c.text, c.text) for c in question.choices]
-		form.fields[question.text] = forms.ChoiceField(label=question.text, choices=choices, widget=forms.RadioSelect)
+		choices = [(c.text, mark_safe(c.text)) for c in question.choices]
+		form.fields[question.text] = forms.ChoiceField(label=mark_safe(question.text), choices=choices, widget=forms.RadioSelect)
 
 	return render(request, 'takeTest.html', {'form': form})
