@@ -21,5 +21,6 @@ from . import view
 urlpatterns = [
 	path(r'', view.index),
 	path(r'verify', view.verify),
+	path(r'takeTest', view.take_test),
 	# path('admin/', admin.site.urls),
 ]

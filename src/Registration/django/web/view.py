@@ -2,11 +2,15 @@ import django.http
 import uuid
 import subprocess
 import json
+import random
+
+from . import Questions
 
 from django.shortcuts import render
 from django.core.mail import send_mail
 from django.core.cache import cache
 from django.conf import settings
+from django.core import serializers
 
 usernameMaxLength = 15
 
@@ -111,3 +115,30 @@ def verify(request: django.http.HttpRequest):
 
 	cache.delete('verify-' + guid)
 	return django.http.HttpResponse(f'Account {accountInfo["username"]} is created.')
+
+
+def take_test(request: django.http.HttpRequest):
+	questions = random.sample(Questions.getQuestions(), 10)
+	questions = set(questions)
+	while True:
+		q1 = questions.copy()
+		size = len(q1)
+		for q in q1:
+			if q.prerequisites is not None:
+				questions.update(q.prerequisites)
+		if len(q1) == size:
+			break
+
+	questions = list(questions)
+	random.shuffle(questions)
+
+	output = []
+	for question in questions:
+		obj = {}
+		obj['text'] = question.text
+		choices=question.choices.copy()
+		random.shuffle(choices)
+		obj['choices'] = [choice.text for choice in choices]
+		output.append(obj)
+
+	return django.http.JsonResponse(output, safe=False)
