@@ -102,41 +102,41 @@ def getQuestions():
 			Choice('在 https://www.gnu.org/software/bash/manual/ 查看官方文档', 6),
 			Choice('输入man bash查看文档', 10),
 			Choice('在 http://ftp.gnu.org/gnu/bash/ 下载对应版本的源代码', 10)
-		]),
+		], group1),
 		Question('关于mpi-servers的github主页，以下哪项是错的？', [
 			Choice('管理员虽然可以直接提交代码，但是发起pull request可增加透明性，让其他人帮忙检查错误', 0),
 			Choice('我们普通用户只能用pull request的方式提交代码', 0),
 			Choice('我们普通用户最好先问过管理员，再创建issue', 10),
 			Choice('写issue可以用中文', 0)
-		]),
-		Question('以下哪项编程原则比其他几项更重要？', [Choice('DRY', 10), Choice('WET', 0), Choice('SRP', 10), Choice('Document Your Code', 10), Choice('Fast Beats Right', 0)]),
+		], group1),
+		Question('以下哪项编程原则比其他几项更重要？', [Choice('DRY', 10), Choice('WET', 0), Choice('SRP', 10), Choice('Document Your Code', 10), Choice('Fast Beats Right', 0)], group1),
 		Question('以下哪项是“高效”使用shine集群的必要条件', [
 			Choice('有Google账号', 0), Choice('有微信账号', 0), Choice('有百度账号', 0), Choice('有GitHub账号', 10)
-		]),
+		], group1),
 		Question('用FinalShell无法连接服务器，或出了一些毛病，你第一步应该', [
 			Choice('加入FinalShell微信群去提问', 6),
 			Choice('在项目主页提出issue', 5),
 			Choice('因为项目主页wiki只使用Putty演示，所以改用Putty看看还有没有问题', 10),
 			Choice('询问管理员', 0),
-		]),
+		], group1),
 		Question('用PyCharm无法连接服务器，或出了一些毛病，你第一步应该', [
 			Choice('加入PyCharm微信群去提问', 6),
 			Choice('在项目主页提出issue', 5),
 			Choice('因为项目主页wiki只使用Putty演示，所以改用Putty看看还有没有问题', 10),
 			Choice('询问管理员', 0),
-		]),
+		], group1),
 		Question('你用RaiDrive把远程服务器上的文件映射到Windows本地，你在Windows双击一个10GB的文本文件，用记事本打开，电脑似乎卡住了。以下哪项叙述是对的？', [
 			Choice('文件太大了，不管在哪用什么打开都不好使。', 1),
 			Choice('记事本太烂了，在Windows用Notepad++或VS Code会好一点', 1),
 			Choice('RaiDrive正在把10GB的文件传输到本地，所以要等待久一点文件才能打开。', 10),
 			Choice('在远程服务器上用不带插件的Vim可以瞬间打开该文件', 10),
-		]),
+		], group1),
 		Question('你用RaiDrive把远程服务器上的文件映射到Windows本地，你在Windows双击一个压缩文件，用WinRAR解压缩，电脑似乎卡住了。以下哪项叙述是错的？', [
 			Choice('通过该方法解压缩出来的文件里的x位（可执行位）不能被正确处理。', 0),
 			Choice('WinRAR太烂了，用7zip或好压会好一点', 10),
 			Choice('WinRAR需要远程读取该压缩文件，再把解压缩出来的文件远程写回服务器，所以慢。', 0),
 			Choice('RaiDrive效率低，用SSHFS会好一点', 0),
-		]),
+		], group1),
 		Question('在Windows上，Putty是唯一受mpi-server支持的SSH客户端。在Linux上，以下哪个是唯一受支持的SSH客户端？', [
 			Choice('OpenSSH', 9),
 			Choice('Putty', 0),
