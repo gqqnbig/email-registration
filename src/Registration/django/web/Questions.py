@@ -137,6 +137,12 @@ def getQuestions():
 			Choice('WinRAR需要远程读取该压缩文件，再把解压缩出来的文件远程写回服务器，所以慢。', 0),
 			Choice('RaiDrive效率低，用SSHFS会好一点', 0),
 		]),
+		Question('在Windows上，Putty是唯一受mpi-server支持的SSH客户端。在Linux上，以下哪个是唯一受支持的SSH客户端？', [
+			Choice('OpenSSH', 9),
+			Choice('Putty', 0),
+			Choice('没有', 10),
+			Choice('Windows Terminal', 0),
+		], group1),
 	]
 
 	return questions
