@@ -4,6 +4,11 @@
 	<meta charset="UTF-8">
 	<title>Shine Cluster Training</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+	<style type="text/css">
+		#form li {
+			list-style: none;
+		}
+	</style>
 {#	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>#}
 </head>
 <body class="container">
@@ -11,11 +16,13 @@
 
 <p>You will need to pass the training in order to access more functions of the Shine cluster.</p>
 
+<p>There will be 10 to 15 questions. Each question worth the same points. You need to score 60% of total points.</p>
+
 <p>在以下问题中，<strong>项目主页</strong>指的是<a href="https://github.com/gqqnbig/mpi-servers" target="_blank">https://github.com/gqqnbig/mpi-servers</a>。</p>
-<form action="/takeTest" method="post">
+<form id="form" action="/takeTest" method="post">
     {% csrf_token %}
     {{ form }}
-    <input type="submit" value="Submit">
+    <input type="submit" value="Next">
 </form>
 
 </body>

@@ -152,6 +152,21 @@ def createQuestionSet():
 	return questionGroups
 
 
+def getFullScoreUpToNow(questionGroups, page: int):
+	n = 0
+	for i in range(page + 1):
+		n = n + len(questionGroups[i])
+	return n * 10
+
+
+def createForm(currentQuestions):
+	form = forms.Form()
+	for question in currentQuestions:
+		choices = [(c.text, mark_safe(c.text)) for c in question.choices]
+		form.fields[question.text] = forms.ChoiceField(label=mark_safe(question.text), choices=choices, widget=forms.RadioSelect)
+	return form
+
+
 def take_test(request: django.http.HttpRequest):
 	questionGroups = request.session.get('QuestionSet', None)
 	if questionGroups is None:
@@ -159,11 +174,35 @@ def take_test(request: django.http.HttpRequest):
 		request.session['QuestionSet'] = questionGroups
 		request.session['Page'] = 0
 
-	currentQuestions = questionGroups[request.session['Page']]
-	form = forms.Form()
+	fullScore = 0
+	gainedScore = request.session.get('gainedScore', 0)
+	try:
+		if request.method == 'POST':
+			page = request.session['Page']
+			currentQuestions = questionGroups[page]
 
-	for question in currentQuestions:
-		choices = [(c.text, mark_safe(c.text)) for c in question.choices]
-		form.fields[question.text] = forms.ChoiceField(label=mark_safe(question.text), choices=choices, widget=forms.RadioSelect)
+			fullScore = getFullScoreUpToNow(questionGroups, page)
+			for question in currentQuestions:
+				choice = request.POST[question.text]
+				score = next(filter(lambda c: c.text == choice, question.choices)).score
+				if score < 10:
+					print(f'Wrong answer for {question.text}.\nChose: {score}pt {choice}')
+				gainedScore += score
 
-	return render(request, 'takeTest.html', {'form': form})
+			if gainedScore < fullScore * 0.6:
+				request.session.clear()
+				print(f'Fail. Score is {gainedScore}/{fullScore}.')
+				return django.http.HttpResponse(f'Your score is {gainedScore}/{fullScore}, too low! <a href="">Try again</a>.')
+
+			request.session['gainedScore'] = gainedScore
+			request.session['Page'] = page + 1
+	except:
+		return django.http.HttpResponseRedirect('/takeTest')
+
+	if request.session['Page'] < len(questionGroups):
+		form = createForm(questionGroups[request.session['Page']])
+		return render(request, 'takeTest.html', {'form': form})
+	else:
+		request.session.clear()
+		print(f'Pass. Score is {gainedScore}/{fullScore}.')
+		return django.http.HttpResponse(f'Your score is {gainedScore}/{fullScore}. You passed. Congratulations.')
