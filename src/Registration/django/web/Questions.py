@@ -21,10 +21,11 @@ def getQuestions():
 					 Choice('询问管理员', 0),
 					 Choice('询问王璐', 6),
 					 Choice('询问吴泽伟', 6),
-					 Choice('查看mpi-servers文档和 http://aha.ipm.edu.mo', 10)
+					 Choice('查看项目主页的文档和<a href="http://aha.ipm.edu.mo" target="_blank">http://aha.ipm.edu.mo</a>', 10)
 				 ]),
 		Question('你用的SHELL是？（此后，本问卷用SHELL指代BASH或Z SHELL）',
-				 [Choice('BASH，它的文档在 https://www.gnu.org/software/bash/manual/', 10), Choice('Z SHELL，它的文档在 https://zsh.sourceforge.io/Doc/', 10)]),
+				 [Choice('BASH，它的文档在<a href="https://www.gnu.org/software/bash/manual/" target="_blank">https://www.gnu.org/software/bash/manual/</a>', 10),
+				  Choice('Z SHELL，它的文档在<a href="https://zsh.sourceforge.io/Doc/" target="_blank">https://zsh.sourceforge.io/Doc/</a>', 10)]),
 	]
 
 	questions = group1 + [
