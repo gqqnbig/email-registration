@@ -65,7 +65,7 @@ def getQuestions():
 		Question('你不知道sbatch的用法，你应该', [
 			Choice('发微信给管理员询问', 0),
 			Choice('在Google搜索sbatch', 8),
-			Choice('查看slurm文档 https://slurm.schedmd.com', 1),
+			Choice('查看slurm文档 https://slurm.schedmd.com', 10),
 			Choice('查看mpi-server主页或文档', 7)
 		], group1),
 		Question('你修改了yolov5的代码，在你的机器上跑没事，在服务器上跑就出错了，你应该', [
