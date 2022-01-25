@@ -1,12 +1,12 @@
-import django.http
-import uuid
-import subprocess
 import json
+import subprocess
+import uuid
 
-from django.shortcuts import render
-from django.core.mail import send_mail
-from django.core.cache import cache
+import django.http
 from django.conf import settings
+from django.core.cache import cache
+from django.core.mail import send_mail
+from django.shortcuts import render
 
 usernameMaxLength = 15
 
@@ -102,9 +102,9 @@ def verify(request: django.http.HttpRequest):
 	if accountInfo['useZShell']:
 		commands.insert(-1, '--zsh')
 
-	output = ''
 	try:
 		output = subprocess.check_output(commands, stderr=subprocess.STDOUT)
+		print(output)
 	except subprocess.CalledProcessError as e:
 		print(f'{commands} returns error.\n{e.output}\n\n{str(e)}')
 		return django.http.HttpResponse('Server error', status=500)
