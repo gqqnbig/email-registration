@@ -110,4 +110,6 @@ def verify(request: django.http.HttpRequest):
 		return django.http.HttpResponse('Server error', status=500)
 
 	cache.delete('verify-' + guid)
+	send_mail('Shine account created', 'SSH login node: aha.ipm.edu.mo\n' + json.dumps(accountInfo),
+			  'aha@ipm.edu.mo', [accountInfo['email']] + settings.ADMIN_EMAILS)
 	return django.http.HttpResponse(f'Account {accountInfo["username"]} is created.')
